@@ -144,3 +144,49 @@ class _BagIterator():
             node = self._cur_node
             self._cur_node = self._cur_node.next
             return node
+
+
+if __name__ == "__main__":
+    # LinkedList 클래스를 사용하여 링크드 리스트를 생성합니다.
+    my_linked_list = LinkedList(Node(1))
+
+    # append 메서드를 사용하여 새로운 노드를 리스트에 추가합니다.
+    my_linked_list.append(Node(2))
+    my_linked_list.append(Node(3))
+
+    # 링크드 리스트의 크기를 확인합니다.
+    list_size = len(my_linked_list)
+    print(f"링크드 리스트의 크기: {list_size}")  # 출력: 링크드 리스트의 크기: 3
+
+    # 링크드 리스트 내부를 출력합니다.
+    print(my_linked_list)  # 출력: 1 -> 2 -> 3 -> End of Linked List
+
+    # 특정 값이 링크드 리스트에 존재하는지 확인합니다.
+    value_exists = 2 in my_linked_list
+    # 출력: 값 2는 링크드 리스트에 존재하는가? True
+    print(f"값 2는 링크드 리스트에 존재하는가? {value_exists}")
+
+    # insert 메서드를 사용하여 노드를 특정 위치에 삽입합니다.
+    new_node = Node(4)
+    inserted = my_linked_list.insert(new_node, 1)  # 인덱스 1에 노드를 삽입
+    if inserted:
+        print("노드를 삽입했습니다.")
+    else:
+        print("삽입 실패")
+
+    # 링크드 리스트 내부를 다시 출력합니다.
+    print(my_linked_list)  # 출력: 1 -> 4 -> 2 -> 3 -> End of Linked List
+
+    # remove 메서드를 사용하여 특정 값을 가진 노드를 삭제합니다.
+    removed = my_linked_list.remove(2)  # 값 2를 가진 노드 삭제
+    if removed:
+        print("노드를 삭제했습니다.")
+    else:
+        print("삭제 실패")
+
+    # 링크드 리스트 내부를 다시 출력합니다.
+    print(my_linked_list)  # 출력: 1 -> 4 -> 3 -> End of Linked List
+
+    # 링크드 리스트를 순회하여 출력합니다.
+    for node in my_linked_list:
+        print(node)  # 출력: Node(1), Node(4), Node(3)
