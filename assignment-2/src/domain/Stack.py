@@ -1,42 +1,39 @@
 from domain.Node import Node
-
+from typing import Any
 # top이 head인 stack
 
 
 class Stack:
     def __init__(self):
-        self.top = None
-        self.size = 0
+        self._top = None
+        self._size = 0
 
-    def push(self, data):
-        if self.top is None:
-            self.top = Node(data)
+    def push(self, data: Any):
+        if self._top is None:
+            self._top = Node(data)
         else:
             new_node = Node(data)
-            new_node.next = self.top
-            self.top = new_node
-        self.size += 1
+            new_node.next = self._top
+            self._top = new_node
+        self._size += 1
 
-    def pop(self):
-        if self.top is None:
-            return None
-        else:
-            popped = self.top.data
-            self.top = self.top.next
-            self.size -= 1
-            return popped
+    def pop(self) -> "Node":
+        if self.is_empty():
+            raise Exception("Stack is empty")
 
-    def peek(self):
-        if self.top is None:
-            return None
-        else:
-            return self.top.data
+        popped = self._top
+        self._top = self._top.next
+        self._size -= 1
+        return popped
 
-    def display(self):
-        if self.top is None:
+    def peek(self) -> "Node":
+        return self._top
+
+    def __repr__(self):
+        if self._top is None:
             return "stack 상태 : EMPTY"
         else:
-            temp = self.top
+            temp = self._top
             s = []
             while temp is not None:
                 s.append(temp.data)
@@ -44,5 +41,5 @@ class Stack:
             s.reverse()
             return f"stack 상태 : {' -> '.join(s)}"
 
-    def is_empty(self):
-        return self.size == 0
+    def is_empty(self) -> bool:
+        return self._size == 0

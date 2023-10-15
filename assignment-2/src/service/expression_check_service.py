@@ -24,11 +24,12 @@ class ExpressionCheckService:
             if char in '([{':
                 stack.push(char)
             elif char in ')]}':
-                if stack.is_empty() or stack.peek() != bracket_pairs[char]:
+                if stack.is_empty() or stack.peek().data != bracket_pairs[char]:
                     is_valid = False
-                stack.pop()
+                else:
+                    stack.pop()
 
-            history.append(stack.display())
+            history.append(str(stack))
             history.append("")
             if not is_valid:
                 break

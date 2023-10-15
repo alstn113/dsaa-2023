@@ -75,7 +75,6 @@ class LinkedList:
     def __iter__(self):
         return _BagIterator(self._head)
 
-    @property
     def head(self) -> 'Node':
         return self._head
 
