@@ -2,7 +2,7 @@ import unittest
 from service.expression_check_service import ExpressionCheckService
 
 
-class ExpressionCheckTest(unittest.TestCase):
+class ExpressionCheckServiceTest(unittest.TestCase):
     """
     ExpressionCheckService 테스트
     """
@@ -10,7 +10,7 @@ class ExpressionCheckTest(unittest.TestCase):
     def setUp(self):
         self.expression_check_service = ExpressionCheckService()
 
-    def test_expression_validation(self):
+    def validate_expression_test(self):
         """
         테스트 문자열 리스트를 순회하며 괄호 유효성 검사를 수행한다.
         """
@@ -36,7 +36,7 @@ class ExpressionCheckTest(unittest.TestCase):
         ]
 
         for expected_result, expression in test_list:
-            is_valid, _ = self.expression_check_service.checkIsValidExpressionWithHistory(
+            is_valid, _ = self.expression_check_service.validate_expression_with_history(
                 expression)
             self.assertEqual(is_valid, expected_result)
 

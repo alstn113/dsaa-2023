@@ -12,9 +12,9 @@ def main():
     )
 
     try:
-        expression = expression_controller.readMathematicalExpression()
-        is_valid = expression_controller.checkIsValidExpression(expression)
-        expression_controller.printResult(is_valid)
+        expression = expression_controller.read_mathematical_expression()
+        is_valid = expression_controller.validate_expression(expression)
+        expression_controller.print_result(is_valid)
     except Exception:
         return
 

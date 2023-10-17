@@ -5,9 +5,9 @@ class OutputView:
     def print(self, message):
         print(message)
 
-    def printError(self, message):
+    def print_error(self, message):
         self.print(message)
 
-    def printHistory(self, history):
+    def print_history(self, history):
         for line in history:
             print(line)

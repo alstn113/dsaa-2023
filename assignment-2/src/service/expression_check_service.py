@@ -8,7 +8,7 @@ class ExpressionCheckService:
         self.closing_brackets = [*self.bracket_pairs.keys()]
         self.all_brakets = self.opening_brackets + self.closing_brackets
 
-    def checkIsValidExpressionWithHistory(self, expression: str) -> bool:
+    def validate_expression_with_history(self, expression: str) -> bool:
         """
         수식이 유효한지 검사합니다.
         :param expression: 수식
