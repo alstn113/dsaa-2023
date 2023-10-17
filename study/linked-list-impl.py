@@ -42,7 +42,7 @@ class LinkedList:
             self._size = self._count()
 
     def __contains__(self, data: Any) -> bool:
-        cur_node = self.head
+        cur_node = self._head
         while cur_node is not None:
             if cur_node.data == data:
                 return True
@@ -51,7 +51,7 @@ class LinkedList:
 
     def _count(self) -> int:
         count = 0
-        cur_node = self.head
+        cur_node = self._head
         while cur_node is not None:
             count += 1
             cur_node = cur_node.next
@@ -61,7 +61,7 @@ class LinkedList:
         return self._size
 
     def __repr__(self) -> str:
-        cur_node = self.head
+        cur_node = self._head
         if self._size == 0:
             return None
 
@@ -94,38 +94,40 @@ class LinkedList:
 
     def insert(self, new_node: "Node", index_number: int) -> bool:
         index_counter = 0
-        cur_node = self.head
+        cur_node = self._head
 
+        # index_number가 0일 경우 맨 앞에 노드를 삽입합니다.
         if index_number == 0:
             new_node.next = self._head
             self._head = new_node
             self._size += 1
             return True
 
+        # 이전 노드와 다음 노드를 저장하면서 index_number에 도달합니다.
         while cur_node is not None:
             if index_number == index_counter:
-                pred_node.next = new_node
-                new_node.next = cur_node
+                pred_node.next = new_node  # 이전 노드의 next를 새로운 노드로 변경
+                new_node.next = cur_node  # 새로운 노드의 next를 현재 노드로 변경
                 self._size += 1
                 return True
             else:
-                pred_node = cur_node
-                cur_node = cur_node.next
+                pred_node = cur_node  # 이전 노드를 저장
+                cur_node = cur_node.next  # 다음 노드로 이동
                 index_counter += 1
         return False
 
     def remove(self, target_value: int) -> bool:
-        cur_node = self.head
+        cur_node = self._head
 
         while cur_node is not None:
             if cur_node.data == target_value:
-                pred_node.next = cur_node.next
-                del (cur_node)
+                pred_node.next = cur_node.next  # 이전 노드의 next를 현재 노드의 next로 변경
+                del (cur_node)  # 노드 삭제
                 self._size -= 1
                 return True
             else:
-                pred_node = cur_node
-                cur_node = cur_node.next
+                pred_node = cur_node  # 이전 노드를 저장
+                cur_node = cur_node.next  # 다음 노드로 이동
         return False
 
 
