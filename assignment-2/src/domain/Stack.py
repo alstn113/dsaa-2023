@@ -37,12 +37,12 @@ class Stack:
             return "stack 상태 : EMPTY"
         else:
             temp = self._top
-            s = []
+            output_list = []
             while temp is not None:
-                s.append(temp.data)
+                output_list.append(temp.data)
                 temp = temp.next
-            s.reverse()
-            return f"stack 상태 : {' -> '.join(s)}"
+            output_list.reverse()
+            return f"stack 상태 : {' -> '.join(output_list)}"
 
     def is_empty(self) -> bool:
         return self._size == 0

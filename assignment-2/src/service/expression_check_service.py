@@ -6,7 +6,6 @@ class ExpressionCheckService:
         self.bracket_pairs = {')': '(', ']': '[', '}': '{'}
         self.opening_brackets = [*self.bracket_pairs.values()]
         self.closing_brackets = [*self.bracket_pairs.keys()]
-        self.all_brakets = self.opening_brackets + self.closing_brackets
 
     def validate_expression_with_history(self, expression: str) -> bool:
         """
@@ -22,7 +21,7 @@ class ExpressionCheckService:
             if char in self.opening_brackets:
                 stack.push(char)
             elif char in self.closing_brackets:
-                is_valid = self.check_closing_bracket(stack, char)
+                is_valid = self._check_closing_bracket(stack, char)
             else:
                 continue
 
@@ -37,7 +36,7 @@ class ExpressionCheckService:
         # 마지막에 스택에 남아있는 여는 괄호가 있다면 유효하지 않은 수식입니다.
         return is_valid and stack.is_empty(), history
 
-    def check_closing_bracket(self, stack: "Stack", char: str) -> bool:
+    def _check_closing_bracket(self, stack: "Stack", char: str) -> bool:
         """
         닫는 괄호가 유효한지 검사합니다.
         """

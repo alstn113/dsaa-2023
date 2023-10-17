@@ -34,7 +34,5 @@ class ExpressionCheckController:
         """
         수식의 유효성 검사 결과를 출력한다.
         """
-        if is_valid:
-            self.output_view.print("Valid expression.")
-        else:
-            self.output_view.print("Invalid expression.")
+        messsage = "Valid expression." if is_valid else "Invalid expression."
+        self.output_view.print(messsage)
