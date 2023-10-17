@@ -25,16 +25,15 @@ class ExpressionCheckService:
             else:
                 continue
 
-            history.append(f"입력값: {char}")
-            # 스택 변화 과정을 기록합니다.
-            history.append(str(stack) + "\n")  # stack.__repr__() 호출
+            # str(stack)은 stack의 __repr__을 호출합니다.
+            history += [f"입력값: {char}", str(stack), ""]
 
             # 유효하지 않은 수식이라면 검사를 종료합니다.
             if not is_valid:
-                break
+                return is_valid, history
 
         # 마지막에 스택에 남아있는 여는 괄호가 있다면 유효하지 않은 수식입니다.
-        return is_valid and stack.is_empty(), history
+        return stack.is_empty(), history
 
     def _check_closing_bracket(self, stack: "Stack", char: str) -> bool:
         """
