@@ -36,8 +36,8 @@ class ExpressionCheckTest(unittest.TestCase):
         ]
 
         for expected_result, expression in test_list:
-            is_valid = self.expression_check_service.checkIsValidExpressionWithHistory(
-                expression)[0]
+            is_valid, _ = self.expression_check_service.checkIsValidExpressionWithHistory(
+                expression)
             self.assertEqual(is_valid, expected_result)
 
 
