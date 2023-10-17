@@ -1,7 +1,9 @@
 # 괄호 검사기
 
 학번: 201911430
+
 이름: 김민수
+
 학과: 컴퓨터공학과 컴퓨터공학전공
 
 ## 프로젝트 소개
@@ -15,7 +17,7 @@
 ```bash
 python src/main.py
 #or
-python src/expression_check_test.py
+python src/expression_check_service_test.py
 ```
 
 2. 검사하고 싶은 수식을 입력합니다.
@@ -78,7 +80,7 @@ Invalid expression.
    - `is_empty(self)`: 스택이 비어 있는지 여부를 반환합니다.
 
 2. **ExpressionCheckService 클래스**:
-   - `validateExpression(self, expression)`: 주어진 표현식을 받아서 괄호의 유효성을 검사하는 메서드입니다. 이 메서드는 스택을 사용하여 괄호의 짝이 맞는지 확인하고, 검사 과정을 history 리스트에 저장합니다. 검사 결과와 history를 반환합니다.
+   - `validate_expression_with_history(self, expression)`: 주어진 표현식을 받아서 괄호의 유효성을 검사하는 메서드입니다. 이 메서드는 스택을 사용하여 괄호의 짝이 맞는지 확인하고, 검사 과정을 history 리스트에 저장합니다. 검사 결과와 history를 반환합니다.
 
 괄호 유효성 검사는 다음과 같이 이루어집니다:
 
