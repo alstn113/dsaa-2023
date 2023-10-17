@@ -10,6 +10,10 @@ class ExpressionCheckController:
         self.expression_check_service = expression_check_service
 
     def readMathematicalExpression(self):
+        """
+        수식을 입력받는다.
+        에러가 있으면 에러를 출력하고 끝낸다.
+        """
         try:
             expression = self.input_view.readMathematicalExpression()
             return expression
@@ -18,12 +22,18 @@ class ExpressionCheckController:
             raise e
 
     def checkIsValidExpression(self, expression) -> bool:
+        """
+        수식의 유효성을 검사한다.
+        """
         is_valid, history = self.expression_check_service.checkIsValidExpressionWithHistory(
             expression)
         self.output_view.printHistory(history)
         return is_valid
 
     def printResult(self, is_valid: bool):
+        """
+        수식의 유효성 검사 결과를 출력한다.
+        """
         if is_valid:
             self.output_view.print("Valid expression.")
         else:

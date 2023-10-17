@@ -1,9 +1,12 @@
 from domain.Node import Node
 from typing import Any
-# top이 head인 stack
 
 
 class Stack:
+    """
+    top이 head인 stack
+    """
+
     def __init__(self):
         self._top = None
         self._size = 0

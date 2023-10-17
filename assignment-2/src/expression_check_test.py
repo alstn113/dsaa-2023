@@ -3,10 +3,18 @@ from service.expression_check_service import ExpressionCheckService
 
 
 class ExpressionCheckTest(unittest.TestCase):
+    """
+    ExpressionCheckService 테스트
+    """
+
     def setUp(self):
         self.expression_check_service = ExpressionCheckService()
 
     def test_expression_validation(self):
+        """
+        테스트 문자열 리스트를 순회하며 괄호 유효성 검사를 수행한다.
+        """
+
         test_list = [
             (False, "([[])"),
             (True, "[{(3+2) - [4/(2*1)]} + {2*3}]"),
