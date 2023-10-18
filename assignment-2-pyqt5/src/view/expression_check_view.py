@@ -40,13 +40,13 @@ class ExpressionCheckView(QMainWindow):
 
         self.setStyleSheet("""
             QLabel {
-                font-size: 20px;
+                font-size: 16px;
             }
             QPushButton {
                 font-size: 14px;
                 background-color: #4CAF50; 
                 color: white; 
-                padding: 5px 20px; 
+                padding: 10px 20px; 
                 border: none; 
                 border-radius: 5px; 
             }
