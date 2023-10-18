@@ -25,7 +25,7 @@ class ExpressionCheckView(QMainWindow):
         input_layout.addWidget(self.input_edit)
 
         self.validation_result_label = QLabel(
-            "Result")
+            "결과가 여기에 표시됩니다.")
         self.validation_result_label.setAlignment(Qt.AlignCenter)
         main_layout.addLayout(input_layout)
         main_layout.addWidget(self.validate_button)
@@ -37,6 +37,23 @@ class ExpressionCheckView(QMainWindow):
         main_widget.setLayout(main_layout)
 
         self.setCentralWidget(main_widget)
+
+        self.setStyleSheet("""
+            QLabel {
+                font-size: 20px;
+            }
+            QPushButton {
+                font-size: 14px;
+                background-color: #4CAF50; 
+                color: white; 
+                padding: 5px 20px; 
+                border: none; 
+                border-radius: 5px; 
+            }
+            QPushButton:hover {
+                background-color: #45a049; 
+            }
+        """)
 
     def validate_expression(self):
         try:
