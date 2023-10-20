@@ -8,7 +8,7 @@ class Stack:
     def __init__(self, first_node: "Node" = None):
         if first_node is not None:
             self.top = first_node
-            self.size += 1
+            self.size = 1
         else:
             self.top = None
             self.size = 0

@@ -24,7 +24,7 @@ class Queue:
             self.tail = node
         else:
             self.tail.next = node
-            self.tail = self.tail.next
+            self.tail = node
         self.size += 1
 
     def dequeue(self) -> "Node":
