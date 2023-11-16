@@ -1,16 +1,21 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from controller.file_sort_contorller import FileSortController
-from service.file_sort_service import FileSortService
-from view.main_view import MainView
+from controller import FileSortController
+from service import FileSortService
+from view import MainView
+
 
 def main():
+    """
+    프로그램 시작점
+    """
     app = QApplication(sys.argv)
 
+    image_slide_controller = FileSortController(
+        FileSortService()
+    )
     main_view = MainView(
-        FileSortController(
-           FileSortService()
-        )
+        image_slide_controller,
     )
 
     main_view.show()

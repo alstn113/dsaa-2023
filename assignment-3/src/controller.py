@@ -1,4 +1,4 @@
-import src.service.file_sort_service as file_sort_service
+from service import FileSortService
 
 
 class FileSortController:
