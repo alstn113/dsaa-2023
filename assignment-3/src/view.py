@@ -1,5 +1,5 @@
 import os
-from PyQt5.QtWidgets import  QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QFileDialog
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QFileDialog
 from controller import FileSortController
 
 class MainView(QWidget):
@@ -9,19 +9,19 @@ class MainView(QWidget):
         self.file_sort_controller = file_sort_controller
         self.file_list = []
 
-        self.selected_folder_label = QLabel("선택된 폴더 이름: ")
-        self.select_folder_button = QPushButton("폴더 선택")
-        self.sort_algorithm_label = QLabel("정렬 알고리즘: ")
+        self.selected_folder_label = QLabel("Selected Folder: ")
+        self.select_folder_button = QPushButton("Select Folder")
+        self.sort_algorithm_label = QLabel("Sorting Algorithm: ")
         self.sort_algorithm_combobox = QComboBox()
-        self.sort_criteria_label = QLabel("정렬 기준: ")
+        self.sort_criteria_label = QLabel("Sorting Criteria: ")
         self.sort_criteria_combobox = QComboBox()
-        self.sort_order_label = QLabel("정렬 순서: ")
+        self.sort_order_label = QLabel("Sorting Order: ")
         self.sort_order_combobox = QComboBox()
-        self.elapsed_time_label = QLabel("걸린 시간: ")
-        self.start_sorting_button = QPushButton("정렬 시작")
-        self.sort_algorithm_combobox.addItems(["버블 정렬", "선택 정렬", "선택 정렬", "퀵 정렬", "병합 정렬"])
-        self.sort_criteria_combobox.addItems(["파일 이름", "생성 날짜", "파일 크기"])
-        self.sort_order_combobox.addItems(["오름차순", "내림차순"])
+        self.elapsed_time_label = QLabel("Elapsed Time: ")
+        self.start_sorting_button = QPushButton("Start Sorting")
+        self.sort_algorithm_combobox.addItems(["Bubble Sort", "Selection Sort", "Selection Sort", "Quick Sort", "Merge Sort"])
+        self.sort_criteria_combobox.addItems(["File Name", "Creation Date", "File Size"])
+        self.sort_order_combobox.addItems(["Ascending", "Descending"])
 
         self.init_ui()
 
@@ -56,7 +56,7 @@ class MainView(QWidget):
 
         self.setLayout(layout)
 
-        self.setWindowTitle('파일 정렬 매니저')
+        self.setWindowTitle('File Sort Manager')
         self.setGeometry(300, 300, 400, 200)
 
         self.select_folder_button.clicked.connect(self.show_folder_dialog)
@@ -64,13 +64,13 @@ class MainView(QWidget):
 
     def show_folder_dialog(self):
         folder_dialog = QFileDialog()
-        folder_path = folder_dialog.getExistingDirectory(self, "폴더 선택")
+        folder_path = folder_dialog.getExistingDirectory(self, "Select Folder")
 
         if not folder_path:
             return
 
         folder_name = os.path.basename(folder_path)
-        self.selected_folder_label.setText(f"선택된 폴더 이름: {folder_name}")
+        self.selected_folder_label.setText(f"Selected Folder: {folder_name}")
 
         file_list = []
         for file_name in os.listdir(folder_path):
@@ -78,17 +78,25 @@ class MainView(QWidget):
             if not os.path.isfile(file_path):
                 continue
 
-            # 파일 이름, 생성 날짜, 파일 크기
-            file_info = [file_name, os.path.getctime(file_path), os.path.getsize(file_path)]
+            # File Name, Creation Date, File Size
+            file_info = {
+                "File Name": file_name,
+                "Creation Date": os.path.getctime(file_path),
+                "File Size": os.path.getsize(file_path)
+            }
             file_list.append(file_info)
 
         self.file_list = file_list
 
     def start_sorting(self):
+        sorted_data, history, elapsed_time = self.file_sort_controller.sort_data(
+            self.file_list,
+            self.sort_algorithm_combobox.currentText(),
+            self.sort_criteria_combobox.currentText(),
+            self.sort_order_combobox.currentText(),
+        )
 
-        self.elapsed_time_label.setText(f"걸린 시간: {1.00:.2f} seconds")
+        print(sorted_data)
+        print(history)
         
-        print(self.sort_algorithm_combobox.currentText())
-        print(self.sort_criteria_combobox.currentText())
-        print(self.sort_order_combobox.currentText())
-        print(self.file_list)
+        self.elapsed_time_label.setText(f"Elapsed Time: {elapsed_time * 1000:.2f} ms")
