@@ -89,14 +89,20 @@ class MainView(QWidget):
         self.file_list = file_list
 
     def start_sorting(self):
+        algorithm = self.sort_algorithm_combobox.currentText()
+        criteria = self.sort_criteria_combobox.currentText()
+        order = self.sort_order_combobox.currentText()
+
         sorted_data, history, elapsed_time = self.file_sort_controller.sort_data(
             self.file_list,
-            self.sort_algorithm_combobox.currentText(),
-            self.sort_criteria_combobox.currentText(),
-            self.sort_order_combobox.currentText(),
+            algorithm, 
+            criteria,
+            order
         )
 
-        print(sorted_data)
-        print(history)
+        for i in range(len(history)):
+            print(list(map(lambda x: x[criteria], history[i])))
+        print()
+        print(f"정렬결과: {sorted_data}")
         
         self.elapsed_time_label.setText(f"Elapsed Time: {elapsed_time * 1000:.2f} ms")
