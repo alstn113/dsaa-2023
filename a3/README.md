@@ -1,28 +1,109 @@
-# Project Guideline - 파일 정렬 매니저 프로젝트
+# 정렬 알고리즘
 
-파일 정렬 매니저는 사용자가 지정한 폴더 내의 파일들을 정렬하는 데스크톱 응용 프로그램입니다. 이 프로그램은 PyQt를 사용하여 GUI를 구현하며, 다양한 정렬 알고리즘을 적용하여 파일을 정렬하고 정렬 과정을 콘솔에 출력합니다. 사용자는 정렬 기준을 선택할 수 있으며, 정렬 과정에서 발생하는 시간 복잡도와 공간 복잡도를 분석할 수 있습니다.
+참고: https://roytravel.tistory.com/328
 
-**주요 기능:**
+- ## bubble sort
 
-1. **폴더 선택**:
-   - 사용자가 시스템 내의 특정 폴더를 선택할 수 있는 기능.
-   - 폴더가 선택되지 않았을 경우, 임의로 파일을 100개 이상 임의의 이름으로 생성하여 현재 프로그램이 실행중인 폴더에 만들어내기
-2. **정렬 알고리즘 선택**:
-   - 다음과 같은 정렬 알고리즘을 선택할 수 있는 버튼 제공:
-     - 버블 정렬 (Bubble Sort)
-     - 선택 정렬 (Selection Sort)
-     - 삽입 정렬 (Insertion Sort)
-     - 퀵 정렬 (Quick Sort)
-     - 머지 정렬(Merge Sort)
-     - 전체 선택
-3. **정렬 기준 선택**:
-   - 파일 이름, 크기, 생성 날짜를 기준으로 정렬할 수 있는 옵션 제공.
-   - 오름차순 및 내림차순 정렬 옵션 제공.
-4. **정렬 과정 시각화**:
-   - 선택한 정렬 알고리즘에 따라 콘솔에 단계별 정렬 과정 출력.
-   - 정렬 과정 중 파일의 이름과 생성 날짜를 함께 출력하여 사용자가 확인할 수 있도록 함.
-5. **성능 분석**:
-   - 각 정렬의 시간 복잡도 분석.
-   - 총 걸린 시간과 총 걸린 횟수를 출력.
-6. **결과 리포트**:
-   - 알고리즘을 실행한 후, 각 정렬 알고리즘에 대한 총 걸린 시간과 성능 분석 결과를 리포트 형태로 출력.
+  시간 복잡도 : `O(n^2)`
+
+  1번~n번까지 반복하면서, 인접한 두 원소를 비교하여 정렬한다.
+  1번~n-1번까지 반복하면서, 인접한 두 원소를 비교하여 정렬한다.
+  1번~n-2번까지 반복하면서, 인접한 두 원소를 비교하여 정렬한다.
+  반복 ...
+
+  ```py
+  for i in range(n):
+     for j in range(n-i-1):
+        if arr[j] > arr[j+1]:
+           arr[j], arr[j+1] = arr[j+1], arr[j]
+  ```
+
+- ## selection sort
+
+  시간 복잡도 : `O(n^2)`
+
+  1번~n번까지 반복하면서, 최소값을 찾아서 맨 앞으로 보낸다.
+  2번~n번까지 반복하면서, 최소값을 찾아서 맨 앞으로 보낸다.
+  3번~n번까지 반복하면서, 최소값을 찾아서 맨 앞으로 보낸다.
+  반복 ...
+
+  ```py
+  for i in range(n):
+     min_idx = i
+     for j in range(i+1, n):
+        if arr[min_idx] > arr[j]:
+           min_idx = j
+     arr[i], arr[min_idx] = arr[min_idx], arr[i]
+  ```
+
+- ## insertion sort
+
+  시간 복잡도 : `O(n^2)` -> 정렬된 경우는 `O(n)`이다.
+
+  2번를 뽑아서 1번과 비교하여 정렬한다.
+  3번를 뽑아서 2번 1번 ...과 비교하여 정렬한다.
+  4번를 뽑아서 3번 2번 1번 ...과 비교하여 정렬한다.
+  반복 ...
+
+  ```py
+  for i in range(1, len(arr)):
+      key = arr[i]
+      j = i-1
+      while j >= 0 and key < arr[j]:
+              arr[j+1] = arr[j]
+              j -= 1
+      arr[j+1] = key
+  ```
+
+- ## merge sort
+
+  시간 복잡도 : `O(nlogn)`
+
+  1. 리스트를 반으로 나눈다.
+  2. 각각의 리스트를 정렬한다.
+  3. 정렬된 두 리스트를 합친다.
+
+  ```py
+  def merge_sort(arr):
+      if len(arr) <= 1:
+          return arr
+      mid = len(arr) // 2
+      left = merge_sort(arr[:mid])
+      right = merge_sort(arr[mid:])
+      return merge(left, right)
+
+  def merge(left, right):
+      result = []
+      while len(left) > 0 and len(right) > 0:
+          if left[0] <= right[0]:
+              result.append(left.pop(0))
+          else:
+              result.append(right.pop(0))
+      if len(left) > 0:
+          result.extend(left)
+      if len(right) > 0:
+          result.extend(right)
+      return result
+  ```
+
+- ## quick sort
+
+  시간 복잡도 : `O(nlogn)` -> 이미 정렬된 경우 `O(n^2)`이다.
+
+  1. pivot을 정한다. (마지막 원소)
+  2. pivot을 기준으로 작은 원소는 왼쪽, 큰 원소는 오른쪽으로 정렬한다.
+  3. 왼쪽과 오른쪽을 각각 정렬한다.
+
+  ```py
+  def quick_sort(arr):
+      if len(arr) <= 1:
+          return arr
+      pivot = arr[-1]
+      left, right = [], []
+      for i in range(len(arr)-1):
+          if arr[i] < pivot:
+              left.append(arr[i])
+          else:
+              right.append(arr[i])
+      return quick_sort(left) + [pivot] + quick_sort(right)
+  ```

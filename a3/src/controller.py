@@ -56,7 +56,7 @@ class FileSortController:
             history.append(data[:])
 
     def __insertion_sort(self, data, history, criteria, order):
-        for i in range(len(data)):
+        for i in range(1, len(data)):
             key = data[i]
             j = i - 1
             if order == "Ascending":
@@ -73,7 +73,73 @@ class FileSortController:
                 history.append(data[:])
     
     def __quick_sort(self, data, history, criteria, order):
-        return
+        self.__quick_sort_recursive(data, history, criteria, order, 0, len(data) - 1)
+
+    def __quick_sort_recursive(self, data, history, criteria, order, low, high):
+        if low < high:
+            partition_index = self.__partition(data, history, criteria, order, low, high)
+            self.__quick_sort_recursive(data, history, criteria, order, low, partition_index - 1)
+            self.__quick_sort_recursive(data, history, criteria, order, partition_index + 1, high)
+
+    # 피봇을 기준으로 작은 값은 왼쪽, 큰 값은 오른쪽으로 분할
+    def __partition(self, data, history, criteria, order, low, high):
+        # 피봇을 마지막 원소로 설정
+        pivot = data[high][criteria]
+        i = low - 1
+
+        for j in range(low, high):
+            if order == "Ascending" and data[j][criteria] <= pivot or order == "Descending" and data[j][criteria] >= pivot:
+                i += 1
+                data[i], data[j] = data[j], data[i]
+                history.append(data[:])
+
+        data[i + 1], data[high] = data[high], data[i + 1]
+        history.append(data[:])
+
+        return i + 1
 
     def __merge_sort(self, data, history, criteria, order):
-        return
+        self.__merge_sort_recursive(data, history, criteria, order, 0, len(data) - 1)
+
+    def __merge_sort_recursive(self, data, history, criteria, order, low, high):
+        # low=high가 되면 원소가 1개이므로 종료
+        if low < high:
+            mid = (low + high) // 2
+            self.__merge_sort_recursive(data, history, criteria, order, low, mid)
+            self.__merge_sort_recursive(data, history, criteria, order, mid + 1, high)
+            self.__merge(data, history, criteria, order, low, mid, high)
+
+    def __merge(self, data, history, criteria, order, low, mid, high):
+        left = data[low:mid + 1]
+        right = data[mid + 1:high + 1]
+
+        i = j = 0
+        k = low
+
+        # left와 right를 비교하면서 data에 삽입
+        while i < len(left) and j < len(right):
+            if (order == "Ascending" and left[i][criteria] <= right[j][criteria]) or \
+               (order == "Descending" and left[i][criteria] >= right[j][criteria]):
+                data[k] = left[i]
+                i += 1
+            else:
+                data[k] = right[j]
+                j += 1
+            k += 1
+
+        # 아래의 경우는 left와 right 중 하나는 모두 삽입이 끝난 경우이다.
+
+        # left에 남은 게 있으면 삽입
+        while i < len(left):
+            data[k] = left[i]
+            i += 1
+            k += 1
+
+        # right에 남은 게 있으면 삽입
+        while j < len(right):
+            data[k] = right[j]
+            j += 1
+            k += 1
+        
+        history.append(data[:])
+     
