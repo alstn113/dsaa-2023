@@ -1,79 +1,45 @@
-import time
-
-class FileSortController:        
-    def sort_data(self, data, selected_sort_algorithm, selected_sort_criteria, selected_sort_order):
-        sorting_algorithm = None
-
-        if selected_sort_algorithm == "Bubble Sort":
-            sorting_algorithm = self.__bubble_sort
-        elif selected_sort_algorithm == "Selection Sort":
-            sorting_algorithm = self.__selection_sort
-        elif selected_sort_algorithm == "Insertion Sort":
-            sorting_algorithm = self.__insertion_sort
-        elif selected_sort_algorithm == "Quick Sort":
-            sorting_algorithm = self.__quick_sort
-        elif selected_sort_algorithm == "Merge Sort":
-            sorting_algorithm = self.__merge_sort
-        else:
-            raise Exception("Invalid sorting algorithm")
-        
-        data_copy = data.copy() 
-        history = [data_copy[:]] 
-
-        start_time = time.time() 
-        sorting_algorithm(data_copy, history, selected_sort_criteria, selected_sort_order) 
-        end_time = time.time() 
-
-        elapsed_time = end_time - start_time 
-
-        return data_copy, history, elapsed_time
-
-    def __bubble_sort(self, data, history, criteria, order):
-        n = len(data)
-        for i in range(n):
-            for j in range(0, n-i-1):
-                if order == "Ascending":
-                    if data[j][criteria] > data[j+1][criteria]:
-                        data[j], data[j+1] = data[j+1], data[j]
-                        history.append(data[:])
-                else:
-                    if data[j][criteria] < data[j+1][criteria]:
-                        data[j], data[j+1] = data[j+1], data[j]
-                        history.append(data[:])
+# 효율적인 탐색 혹은 정렬 지원
+# 평균 O(log n) 시간복잡도로 검색 지원
+# 데이터의 저장 용이
+# 사실상 binary tree의 사용 이유
 
 
-    def __selection_sort(self, data, history, criteria, order):
-        for i in range(len(data)):
-            min_idx = i
-            for j in range(i + 1, len(data)):
-                if order == "Ascending":
-                    if data[min_idx][criteria] > data[j][criteria]:
-                        min_idx = j
-                else:
-                    if data[min_idx][criteria] < data[j][criteria]:
-                        min_idx = j
-            data[i], data[min_idx] = data[min_idx], data[i]
-            history.append(data[:])
+class Node:
+    def __init__(self, name, email, phone):
+        self.name = name
+        self.email = email
+        self.phone = phone
+        self.left = None
+        self.right = None
 
-    def __insertion_sort(self, data, history, criteria, order):
-        for i in range(len(data)):
-            key = data[i]
-            j = i - 1
-            if order == "Ascending":
-                while j >= 0 and key[criteria] < data[j][criteria]:
-                    data[j + 1] = data[j]
-                    j -= 1
-                data[j + 1] = key
-                history.append(data[:])
-            else:
-                while j >= 0 and key[criteria] > data[j][criteria]:
-                    data[j + 1] = data[j]
-                    j -= 1
-                data[j + 1] = key
-                history.append(data[:])
+# Binary Search Tree
+class BST:
+    def __init__(self):
+        self.root = None    
+
+
+    def insert(self, name, email, phone):
+        self.root = self._insert_value(self.root, name, email, phone)
+        return self.root is not None
     
-    def __quick_sort(self, data, history, criteria, order):
-        return
+    def _insert_value(self, node: "Node", name, email, phone):
+        if node is None:
+            node = Node(name, email, phone)
+        else:
+            if name <= node.name:
+                node.left = self._insert_value(node.left, name, email, phone)
+            else:
+                node.right = self._insert_value(node.right, name, email, phone)
+        return node
 
-    def __merge_sort(self, data, history, criteria, order):
-        return
+
+
+class TreeController:        
+    pass
+
+if __name__ == "__main__":
+    # 예제로 BST를 사용해보기
+    bst = BST()
+    bst.insert("John Doe", "john.doe@example.com", "123-456-7890")
+    bst.insert("Jane Smith", "jane.smith@example.com", "987-654-3210")
+    bst.insert("Bob Johnson", "bob.johnson@example.com", "555-123-4567")

@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from controller import FileSortController
+from controller import TreeController
 from view import MainView
 
 
@@ -10,9 +10,9 @@ def main():
     """
     app = QApplication(sys.argv)
 
-    file_sort_controller = FileSortController()
+    tree_controller = TreeController()
     main_view = MainView(
-        file_sort_controller,
+        tree_controller
     )
 
     main_view.show()
