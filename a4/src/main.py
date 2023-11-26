@@ -1,6 +1,5 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from controller import TreeController
 from view import MainView
 
 
@@ -10,10 +9,7 @@ def main():
     """
     app = QApplication(sys.argv)
 
-    tree_controller = TreeController()
-    main_view = MainView(
-        tree_controller
-    )
+    main_view = MainView()
 
     main_view.show()
 

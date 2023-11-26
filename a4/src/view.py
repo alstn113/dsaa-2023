@@ -1,125 +1,16 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton, QTreeWidget, QTreeWidgetItem, QWidget
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTreeWidget, QTreeWidgetItem, QWidget
 from PyQt5.QtCore import Qt
+from binary_search_tree import BinarySearchTree, Node
 
 
-class AVLNode:
-    def __init__(self, key, data):
-        self.key = key
-        self.data = data
-        self.height = 1
-        self.left = None
-        self.right = None
-
-
-class AVLTree:
-    def __init__(self):
-        self.root = None
-
-    def height(self, node):
-        if not node:
-            return 0
-        return node.height
-
-    def _balance_factor(self, node):
-        return self.height(node.left) - self.height(node.right)
-
-    def _update_height(self, node):
-        node.height = 1 + max(self.height(node.left), self.height(node.right))
-
-    def _rotate_left(self, y):
-        x = y.right
-        T2 = x.left
-
-        x.left = y
-        y.right = T2
-
-        self._update_height(y)
-        self._update_height(x)
-
-        return x
-
-    def _rotate_right(self, x):
-        y = x.left
-        T2 = y.right
-
-        y.right = x
-        x.left = T2
-
-        self._update_height(x)
-        self._update_height(y)
-
-        return y
-
-    def _insert_value(self, node, key, data):
-        if not node:
-            return AVLNode(key, data)
-
-        if key < node.key:
-            node.left = self._insert_value(node.left, key, data)
-        else:
-            node.right = self._insert_value(node.right, key, data)
-
-        self._update_height(node)
-
-        balance = self._balance_factor(node)
-
-        # Left Heavy
-        if balance > 1:
-            if key < node.left.key:
-                return self._rotate_right(node)
-            else:
-                node.left = self._rotate_left(node.left)
-                return self._rotate_right(node)
-
-        # Right Heavy
-        if balance < -1:
-            if key > node.right.key:
-                return self._rotate_left(node)
-            else:
-                node.right = self._rotate_right(node.right)
-                return self._rotate_left(node)
-
-        return node
-
-    def insert(self, key, data):
-        self.root = self._insert_value(self.root, key, data)
-
-    def search(self, key):
-        return self._search_value(self.root, key)
-
-    def _search_value(self, node, key):
-        if not node or node.key == key:
-            return node
-        if key < node.key:
-            return self._search_value(node.left, key)
-        else:
-            return self._search_value(node.right, key)
-
-
-def tree_widget_from_avl_tree(node, parent_item=None):
-    if not node:
-        return
-
-    item = QTreeWidgetItem(parent_item or [])
-    item.setText(0, str(node.key))
-    item.setText(1, node.data["email"])
-    item.setText(2, node.data["phone"])
-
-    item.setExpanded(True)
-
-    tree_widget_from_avl_tree(node.left, item)
-    tree_widget_from_avl_tree(node.right, item)
-
-
-class AddressBookApp(QMainWindow):
+class MainView(QMainWindow):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("주소록 관리 시스템")
         self.setGeometry(100, 100, 800, 600)
 
-        self.avl_tree = AVLTree()
+        self.avl_tree = BinarySearchTree()
 
         self.init_ui()
 
@@ -128,9 +19,9 @@ class AddressBookApp(QMainWindow):
         self.tree_widget = QTreeWidget(self)
         self.tree_widget.setHeaderLabels(["이름", "이메일", "전화번호"])
 
-        self.name_edit = QLineEdit(self)
-        self.email_edit = QLineEdit(self)
-        self.phone_edit = QLineEdit(self)
+        self.name_input = QLineEdit(self)
+        self.email_input = QLineEdit(self)
+        self.phone_input = QLineEdit(self)
 
         self.add_button = QPushButton("추가", self)
         self.search_button = QPushButton("검색", self)
@@ -139,18 +30,26 @@ class AddressBookApp(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.tree_widget)
 
-        form_layout = QVBoxLayout()
+        vertical_layout = QVBoxLayout()
+        form_layout = QHBoxLayout()
         form_layout.addWidget(QLabel("이름:"))
-        form_layout.addWidget(self.name_edit)
+        form_layout.addWidget(self.name_input)
         form_layout.addWidget(QLabel("이메일:"))
-        form_layout.addWidget(self.email_edit)
+        form_layout.addWidget(self.email_input)
         form_layout.addWidget(QLabel("전화번호:"))
-        form_layout.addWidget(self.phone_edit)
+        form_layout.addWidget(self.phone_input)
         form_layout.addWidget(self.add_button)
-        form_layout.addWidget(self.search_button)
+        vertical_layout.addLayout(form_layout)
+
+        search_layout = QHBoxLayout()
+        self.find_name_input = QLineEdit(self)
+        search_layout.addWidget(QLabel("검색할 이름:"))
+        search_layout.addWidget(self.find_name_input)
+        search_layout.addWidget(self.search_button)
+        vertical_layout.addLayout(search_layout)
 
         container = QWidget()
-        container.setLayout(form_layout)
+        container.setLayout(vertical_layout)
 
         layout.addWidget(container)
 
@@ -162,13 +61,44 @@ class AddressBookApp(QMainWindow):
         self.add_button.clicked.connect(self.add_contact)
         self.search_button.clicked.connect(self.search_contact)
 
+        # 초기 데이터 추가
+        self.avl_tree.insert("김민수", "minsu.kim@example.com", "010-1234-5678")
+        self.avl_tree.insert("이하나", "hana.lee@example.com", "010-2345-6789")
+        self.avl_tree.insert(
+            "박철수", "chulsoo.park@example.com", "010-3456-7890")
+        self.avl_tree.insert(
+            "최영희", "younghee.choi@example.com", "010-4567-8901")
+        self.avl_tree.insert("정다혜", "dahye.jung@example.com", "010-5678-9012")
+        self.avl_tree.insert("김철수", "cjftn@gmail.com", "010-1234-5678")
+        self.avl_tree.insert("이영희", "dudgml@gmail.com", "010-2345-6789")
+
+        self.tree_widget_from_avl_tree(self.avl_tree.root, self.tree_widget)
+
+    def tree_widget_from_avl_tree(self, node: "Node", parent_item=None):
+        if not node:
+            return
+
+        item = QTreeWidgetItem(parent_item or [])
+        item.setText(0, node.name)
+        item.setText(1, node.email)
+        item.setText(2, node.phone)
+
+        item.setExpanded(True)
+
+        self.tree_widget_from_avl_tree(node.left, item)
+        self.tree_widget_from_avl_tree(node.right, item)
+
     def add_contact(self):
         # 연락처 추가 기능 구현
         name = self.name_edit.text()
         email = self.email_edit.text()
         phone = self.phone_edit.text()
 
-        self.avl_tree.insert(name, {"email": email, "phone": phone})
+        if self.avl_tree.find(name):
+            print("[✅ 추가 결과]: 이미 존재하는 이름입니다.")
+        else:
+            self.avl_tree.insert(name, email, phone)
+            print(f"[❎ 추가 결과]: {name}, {email}, {phone}")
 
         # 화면 갱신
         self.update_tree()
@@ -177,26 +107,18 @@ class AddressBookApp(QMainWindow):
         # 연락처 검색 기능 구현
         name = self.name_edit.text()
 
-        result = self.avl_tree.search(name)
+        target_node = self.avl_tree.find(name)
 
-        if result:
-            data = result.data
-            email = data["email"]
-            phone = data["phone"]
-            print(f"Name: {name}\nEmail: {email}\nPhone: {phone}")
+        if target_node:
+            email = target_node.email
+            phone = target_node.phone
+            print(f"[🔍 검색 결과]: {name}, {email}, {phone}")
         else:
-            print(f"Contact not found.")
+            print(f"[🔍 검색 결과]: 존재하지 않는 이름입니다.")
 
     def update_tree(self):
         # 트리 위젯 업데이트
         self.tree_widget.clear()
 
         # AVL 트리에서 데이터를 가져와서 트리 위젯에 추가
-        tree_widget_from_avl_tree(self.avl_tree.root, self.tree_widget)
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    address_book_app = AddressBookApp()
-    address_book_app.show()
-    sys.exit(app.exec_())
+        self.tree_widget_from_avl_tree(self.avl_tree.root, self.tree_widget)

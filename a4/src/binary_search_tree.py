@@ -73,7 +73,7 @@ class BinarySearchTree:
 
     def _find_value(self, root: "Node", key):
         if root is None or root.name == key:
-            return root is not None
+            return root
         elif key < root.name:
             return self._find_value(root.left, key)
         else:
