@@ -43,8 +43,8 @@ class BST:
         deleted = False
         if key == node.name:
             deleted = True
+            # Case3 삭제할 노드가 자식을 두 개 가지고 있을 경우
             if node.left and node.right:
-                # replace the node to the leftmost of node.right
                 parent, child = node, node.right
                 while child.left is not None:
                     parent, child = child, child.left
@@ -53,8 +53,11 @@ class BST:
                     parent.left = child.right
                     child.right = node.right
                 node = child
+            # Case2 삭제할 노드가 자식을 한 개 가지고 있을 경우
             elif node.left or node.right:
                 node = node.left or node.right
+            
+            # Case1 삭제할 노드가 리프 노드일 경우
             else:
                 node =None
         elif key < node.name:
@@ -63,6 +66,18 @@ class BST:
             node.right, deleted = self._delete_value(node.right, key)
         return node, deleted
     
+    def find(self, key):
+        return self._find_value(self.root, key)
+
+    def _find_value(self, root: "Node", key):
+        if root is None or root.name == key:
+            return root is not None
+        elif key < root.name:
+            return self._find_value(root.left, key)
+        else:
+            return self._find_value(root.right, key)
+        
+
 
 
 
@@ -76,16 +91,23 @@ if __name__ == "__main__":
     bst.insert("Jane Smith", "jane.smith@example.com", "987-654-3210")
     bst.insert("Bob Johnson", "bob.johnson@example.com", "555-123-4567")
 
-    # 데이터 삭제 예시
-    deleted = bst.delete("Jane Smith")
-    if deleted:
-        print("Node deleted successfully.")
+    # 데이터 검색 예시
+    search_key = "Jane Smith"
+    if bst.find(search_key):
+        print(f"{search_key} found in the BST.")
     else:
-        print("Node not found.")
+        print(f"{search_key} not found in the BST.")
 
-    # 다시 삭제 시도 (이미 삭제된 노드)
-    deleted = bst.delete("Jane Smith")
+    # 데이터 삭제 예시
+    delete_key = "Jane Smith"
+    deleted = bst.delete(delete_key)
     if deleted:
-        print("Node deleted successfully.")
+        print(f"{delete_key} deleted from the BST.")
     else:
-        print("Node not found.")
+        print(f"{delete_key} not found in the BST.")
+
+    # 다시 검색 (이미 삭제된 노드)
+    if bst.find(delete_key):
+        print(f"{delete_key} found in the BST.")
+    else:
+        print(f"{delete_key} not found in the BST.")
