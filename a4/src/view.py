@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTreeWidget, QTreeWidgetItem, QWidget
-from PyQt5.QtCore import Qt
+import random
 from binary_search_tree import BinarySearchTree, Node
 
 
@@ -19,12 +19,19 @@ class MainView(QMainWindow):
         self.tree_widget = QTreeWidget(self)
         self.tree_widget.setHeaderLabels(["이름", "이메일", "전화번호"])
 
+        # 각 열의 기본 너비 설정
+        self.tree_widget.setColumnWidth(0, 300)
+        self.tree_widget.setColumnWidth(1, 200)
+        self.tree_widget.setColumnWidth(2, 150)
+
         self.name_input = QLineEdit(self)
         self.email_input = QLineEdit(self)
         self.phone_input = QLineEdit(self)
 
         self.add_button = QPushButton("추가", self)
         self.search_button = QPushButton("검색", self)
+        self.save_button = QPushButton("저장", self)
+        self.load_button = QPushButton("불러오기", self)
 
         # 레이아웃 설정
         layout = QVBoxLayout()
@@ -48,10 +55,14 @@ class MainView(QMainWindow):
         search_layout.addWidget(self.search_button)
         vertical_layout.addLayout(search_layout)
 
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.save_button)
+        button_layout.addWidget(self.load_button)
+
         container = QWidget()
         container.setLayout(vertical_layout)
-
         layout.addWidget(container)
+        layout.addLayout(button_layout)
 
         central_widget = QWidget()
         central_widget.setLayout(layout)
@@ -60,17 +71,15 @@ class MainView(QMainWindow):
         # 이벤트 핸들러 연결
         self.add_button.clicked.connect(self.add_contact)
         self.search_button.clicked.connect(self.search_contact)
+        self.save_button.clicked.connect(self.save_to_csv)
+        self.load_button.clicked.connect(self.load_from_csv)
 
         # 초기 데이터 추가
-        self.avl_tree.insert("김민수", "minsu.kim@example.com", "010-1234-5678")
-        self.avl_tree.insert("이하나", "hana.lee@example.com", "010-2345-6789")
-        self.avl_tree.insert(
-            "박철수", "chulsoo.park@example.com", "010-3456-7890")
-        self.avl_tree.insert(
-            "최영희", "younghee.choi@example.com", "010-4567-8901")
-        self.avl_tree.insert("정다혜", "dahye.jung@example.com", "010-5678-9012")
-        self.avl_tree.insert("김철수", "cjftn@gmail.com", "010-1234-5678")
-        self.avl_tree.insert("이영희", "dudgml@gmail.com", "010-2345-6789")
+        for _ in range(20):
+            name = "".join(random.choices("김이박수우영카도베채각총명하영구황문민", k=3))
+            email = f"{name.lower()}@gmail.com"
+            phone = f"010-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
+            self.avl_tree.insert(name, email, phone)
 
         self.tree_widget_from_avl_tree(self.avl_tree.root, self.tree_widget)
 
@@ -90,9 +99,9 @@ class MainView(QMainWindow):
 
     def add_contact(self):
         # 연락처 추가 기능 구현
-        name = self.name_edit.text()
-        email = self.email_edit.text()
-        phone = self.phone_edit.text()
+        name = self.name_input.text()
+        email = self.email_input.text()
+        phone = self.phone_input.text()
 
         if self.avl_tree.find(name):
             print("[✅ 추가 결과]: 이미 존재하는 이름입니다.")
@@ -105,7 +114,7 @@ class MainView(QMainWindow):
 
     def search_contact(self):
         # 연락처 검색 기능 구현
-        name = self.name_edit.text()
+        name = self.find_name_input.text()
 
         target_node = self.avl_tree.find(name)
 
@@ -115,6 +124,19 @@ class MainView(QMainWindow):
             print(f"[🔍 검색 결과]: {name}, {email}, {phone}")
         else:
             print(f"[🔍 검색 결과]: 존재하지 않는 이름입니다.")
+
+    def save_to_csv(self):
+        # CSV 파일로 저장
+        self.avl_tree.save_to_csv('address_book.csv')
+        print("[💾 저장 결과]: 주소록이 성공적으로 저장되었습니다.")
+
+    def load_from_csv(self):
+        # CSV 파일에서 불러오기
+        self.avl_tree.load_from_csv('address_book.csv')
+        print("[📂 불러오기 결과]: 주소록이 성공적으로 불러와졌습니다.")
+
+        # 화면 갱신
+        self.update_tree()
 
     def update_tree(self):
         # 트리 위젯 업데이트
