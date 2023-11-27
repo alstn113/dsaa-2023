@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTreeWidget, QTreeWidgetItem, QWidget
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTreeWidget, QTreeWidgetItem, QWidget, QFileDialog
 import random
 from binary_search_tree import BinarySearchTree, Node
 
@@ -126,9 +126,38 @@ class MainView(QMainWindow):
             print(f"[🔍 검색 결과]: 존재하지 않는 이름입니다.")
 
     def save_to_csv(self):
-        # CSV 파일로 저장
-        self.avl_tree.save_to_csv('address_book.csv')
-        print("[💾 저장 결과]: 주소록이 성공적으로 저장되었습니다.")
+        # 파일 대화상자를 열어 사용자로부터 저장할 위치를 선택받습니다.
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        file_name, _ = QFileDialog.getSaveFileName(
+            self, "주소록 저장", "", "CSV Files (*.csv);;All Files (*)", options=options)
+
+        # 사용자가 취소를 누르면 무시합니다.
+        if not file_name:
+            return
+
+        # 선택된 파일에 주소록을 저장합니다.
+        with open(file_name, mode='w', encoding='utf-8') as file:
+            # CSV 파일에 헤더를 쓰기
+            file.write("이름,이메일,전화번호\n")
+
+            # AVL 트리를 중위 순회하며 데이터를 CSV 파일에 쓰기
+            self._inorder_traversal_save(self.avl_tree.root, file)
+
+        print(f"[💾 저장 결과]: 주소록이 {file_name}에 성공적으로 저장되었습니다.")
+
+    def _inorder_traversal_save(self, node: "Node", file):
+        if not node:
+            return
+
+        # 왼쪽 서브트리 순회
+        self._inorder_traversal_save(node.left, file)
+
+        # 노드 데이터 CSV 파일에 쓰기
+        file.write(f"{node.name},{node.email},{node.phone}\n")
+
+        # 오른쪽 서브트리 순회
+        self._inorder_traversal_save(node.right, file)
 
     def load_from_csv(self):
         # CSV 파일에서 불러오기
