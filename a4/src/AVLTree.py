@@ -15,7 +15,7 @@ class Node:
         self.height = 1
 
 
-class BinarySearchTree:
+class AVLTree:
     def __init__(self):
         self.root = None
 
@@ -151,7 +151,7 @@ class BinarySearchTree:
 
 if __name__ == "__main__":
     # 데이터 삽입 예시
-    avl_tree = BinarySearchTree()
+    avl_tree = AVLTree()
     avl_tree.insert_key("John Doe", "john.doe@example.com", "123-456-7890")
     avl_tree.insert_key("Jane Smith", "jane.smith@example.com", "987-654-3210")
     avl_tree.insert_key(

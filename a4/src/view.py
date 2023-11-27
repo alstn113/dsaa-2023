@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTreeWidget, QTreeWidgetItem, QWidget, QFileDialog
 import random
-from binary_search_tree import BinarySearchTree, Node
+from AVLTree import AVLTree, Node
 
 
 class MainView(QMainWindow):
@@ -10,7 +10,7 @@ class MainView(QMainWindow):
         self.setWindowTitle("주소록 관리 시스템")
         self.setGeometry(100, 100, 800, 600)
 
-        self.avl_tree = BinarySearchTree()
+        self.avl_tree = AVLTree()
 
         self.init_ui()
 
@@ -75,9 +75,9 @@ class MainView(QMainWindow):
         self.load_button.clicked.connect(self.load_from_csv)
 
         # 초기 데이터 추가
-        for _ in range(20):
+        for _ in range(15):
             name = "".join(random.choices(
-                "abcdefghijklmnopqrstuvwxyz1234567890", k=10))
+                "abcdefghijklmnopqrstuvwxyz1234567890", k=5))
             email = f"{name.lower()}@gmail.com"
             phone = f"010-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
             self.avl_tree.insert_key(name, email, phone)
@@ -162,7 +162,7 @@ class MainView(QMainWindow):
 
     def load_from_csv(self):
         # AVL 트리 초기화
-        self.avl_tree = BinarySearchTree()
+        self.avl_tree = AVLTree()
 
         # 파일 대화상자를 열어 사용자로부터 불러올 파일을 선택받습니다.
         options = QFileDialog.Options()
