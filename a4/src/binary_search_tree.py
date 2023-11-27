@@ -11,31 +11,92 @@ class Node:
         self.phone = phone
         self.left: "Node" = None
         self.right: "Node" = None
+        # AVL 트리에서 사용하는 추가 필드
+        self.height = 1
 
 
 class BinarySearchTree:
     def __init__(self):
         self.root = None
 
-    def insert(self, name, email, phone):
-        self.root = self._insert_value(self.root, name, email, phone)
-        return self.root is not None
+    def height(self, node: "Node"):
+        if not node:
+            return 0
+        return node.height
 
-    def _insert_value(self, node: "Node", name, email, phone):
+    def update_height(self, node: "Node"):
+        if not node:
+            return
+        node.height = max(self.height(node.left), self.height(node.right)) + 1
+
+    def balance_factor(self, node: "Node"):
         if node is None:
-            node = Node(name, email, phone)
-        else:
-            if name <= node.name:
-                node.left = self._insert_value(node.left, name, email, phone)
-            else:
-                node.right = self._insert_value(node.right, name, email, phone)
+            return 0
+        return self.height(node.left) - self.height(node.right)
+
+    def rotate_right(self, y: "Node"):
+        x = y.left
+        T2 = x.right
+
+        x.right = y
+        y.left = T2
+
+        self.update_height(y)
+        self.update_height(x)
+
+        return x
+
+    def rotate_left(self, x: "Node"):
+        y = x.right
+        T2 = y.left
+
+        y.left = x
+        x.right = T2
+
+        self.update_height(x)
+        self.update_height(y)
+
+        return y
+
+    def balance(self, node: "Node"):
+        if node is None:
+            return node
+
+        self.update_height(node)
+
+        balance = self.balance_factor(node)
+
+        # Left Heavy
+        if balance > 1:
+            if self.balance_factor(node.left) < 0:
+                node.left = self.rotate_left(node.left)
+            return self.rotate_right(node)
+
+        # Right Heavy
+        if balance < -1:
+            if self.balance_factor(node.right) > 0:
+                node.right = self.rotate_right(node.right)
+            return self.rotate_left(node)
+
         return node
 
-    def delete(self, key):
-        self.root, deleted = self._delete_value(self.root, key)
-        return deleted
+    def insert(self, node: "Node", name, email, phone):
+        if node is None:
+            return Node(name, email, phone)
 
-    def _delete_value(self, node: "Node", key):
+        if name < node.name:
+            node.left = self.insert(node.left, name, email, phone)
+        elif name > node.name:
+            node.right = self.insert(node.right, name, email, phone)
+        else:
+            return node
+
+        return self.balance(node)
+
+    def insert_key(self, name, email, phone):
+        self.root = self.insert(self.root, name, email, phone)
+
+    def delete(self, node: "Node", key):
         if node is None:
             return node, False
 
@@ -63,10 +124,18 @@ class BinarySearchTree:
                 node = None
 
         elif key < node.name:
-            node.left, deleted = self._delete_value(node.left, key)
+            node.left, deleted = self.delete(node.left, key)
         else:
-            node.right, deleted = self._delete_value(node.right, key)
-        return node, deleted
+            node.right, deleted = self.delete(node.right, key)
+
+        if node:
+            return self.balance(node), deleted
+        else:
+            return None, deleted
+
+    def delete_key(self, key):
+        self.root, deleted = self.delete(self.root, key)
+        return deleted
 
     def find(self, key):
         return self._find_value(self.root, key)
@@ -82,28 +151,29 @@ class BinarySearchTree:
 
 if __name__ == "__main__":
     # 데이터 삽입 예시
-    bst = BinarySearchTree()
-    bst.insert("John Doe", "john.doe@example.com", "123-456-7890")
-    bst.insert("Jane Smith", "jane.smith@example.com", "987-654-3210")
-    bst.insert("Bob Johnson", "bob.johnson@example.com", "555-123-4567")
+    avl_tree = BinarySearchTree()
+    avl_tree.insert_key("John Doe", "john.doe@example.com", "123-456-7890")
+    avl_tree.insert_key("Jane Smith", "jane.smith@example.com", "987-654-3210")
+    avl_tree.insert_key(
+        "Bob Johnson", "bob.johnson@example.com", "555-123-4567")
 
     # 데이터 검색 예시
     search_key = "Jane Smith"
-    if bst.find(search_key):
-        print(f"{search_key} found in the BST.")
+    if avl_tree.find(search_key):
+        print(f"{search_key} found in the AVL Tree.")
     else:
-        print(f"{search_key} not found in the BST.")
+        print(f"{search_key} not found in the AVL Tree.")
 
     # 데이터 삭제 예시
     delete_key = "Jane Smith"
-    deleted = bst.delete(delete_key)
+    deleted = avl_tree.delete_key(delete_key)
     if deleted:
-        print(f"{delete_key} deleted from the BST.")
+        print(f"{delete_key} deleted from the AVL Tree.")
     else:
-        print(f"{delete_key} not found in the BST.")
+        print(f"{delete_key} not found in the AVL Tree.")
 
     # 다시 검색 (이미 삭제된 노드)
-    if bst.find(delete_key):
-        print(f"{delete_key} found in the BST.")
+    if avl_tree.find(delete_key):
+        print(f"{delete_key} found in the AVL Tree.")
     else:
-        print(f"{delete_key} not found in the BST.")
+        print(f"{delete_key} not found in the AVL Tree.")

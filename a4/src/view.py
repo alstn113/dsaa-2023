@@ -76,10 +76,11 @@ class MainView(QMainWindow):
 
         # 초기 데이터 추가
         for _ in range(20):
-            name = "".join(random.choices("김이박수우영카도베채각총명하영구황문민", k=3))
+            name = "".join(random.choices(
+                "abcdefghijklmnopqrstuvwxyz1234567890", k=10))
             email = f"{name.lower()}@gmail.com"
             phone = f"010-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
-            self.avl_tree.insert(name, email, phone)
+            self.avl_tree.insert_key(name, email, phone)
 
         self.tree_widget_from_avl_tree(self.avl_tree.root, self.tree_widget)
 
@@ -106,7 +107,7 @@ class MainView(QMainWindow):
         if self.avl_tree.find(name):
             print("[✅ 추가 결과]: 이미 존재하는 이름입니다.")
         else:
-            self.avl_tree.insert(name, email, phone)
+            self.avl_tree.insert_key(name, email, phone)
             print(f"[❎ 추가 결과]: {name}, {email}, {phone}")
 
         # 화면 갱신
@@ -160,9 +161,30 @@ class MainView(QMainWindow):
         self._inorder_traversal_save(node.right, file)
 
     def load_from_csv(self):
-        # CSV 파일에서 불러오기
-        self.avl_tree.load_from_csv('address_book.csv')
-        print("[📂 불러오기 결과]: 주소록이 성공적으로 불러와졌습니다.")
+        # AVL 트리 초기화
+        self.avl_tree = BinarySearchTree()
+
+        # 파일 대화상자를 열어 사용자로부터 불러올 파일을 선택받습니다.
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        file_name, _ = QFileDialog.getOpenFileName(
+            self, "주소록 불러오기", "", "CSV Files (*.csv);;All Files (*)", options=options)
+
+        # 사용자가 취소를 누르면 무시합니다.
+        if not file_name:
+            return
+
+        # 선택된 파일에서 주소록을 불러옵니다.
+        with open(file_name, mode='r', encoding='utf-8') as file:
+            # CSV 파일의 헤더를 무시합니다.
+            file.readline()
+
+            # CSV 파일의 데이터를 읽어서 AVL 트리에 추가합니다.
+            for line in file:
+                name, email, phone = line.strip().split(',')
+                self.avl_tree.insert_key(name, email, phone)
+
+        print(f"[📂 불러오기 결과]: 주소록이 {file_name}에서 성공적으로 불러와졌습니다.")
 
         # 화면 갱신
         self.update_tree()
