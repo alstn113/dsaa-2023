@@ -75,12 +75,12 @@ class MainView(QMainWindow):
         self.load_button.clicked.connect(self.load_from_csv)
 
         # 초기 데이터 추가
-        for _ in range(15):
-            name = "".join(random.choices(
-                "abcdefghijklmnopqrstuvwxyz1234567890", k=5))
-            email = f"{name.lower()}@gmail.com"
-            phone = f"010-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
-            self.avl_tree.insert_key(name, email, phone)
+        # for _ in range(15):
+        #     name = "".join(random.choices(
+        #         "abcdefghijklmnopqrstuvwxyz1234567890", k=5))
+        #     email = f"{name.lower()}@gmail.com"
+        #     phone = f"010-{random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
+        #     self.avl_tree.insert_key(name, email, phone)
 
         self.tree_widget_from_avl_tree(self.avl_tree.root, self.tree_widget)
 
