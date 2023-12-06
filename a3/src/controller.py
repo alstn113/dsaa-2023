@@ -1,6 +1,7 @@
 import time
 
-class FileSortController:        
+
+class FileSortController:
     def sort_data(self, data, selected_sort_algorithm, selected_sort_criteria, selected_sort_order):
         sorting_algorithm = None
 
@@ -16,15 +17,16 @@ class FileSortController:
             sorting_algorithm = self.__merge_sort
         else:
             raise Exception("Invalid sorting algorithm")
-        
-        data_copy = data.copy() 
-        history = [data_copy[:]] 
 
-        start_time = time.time() 
-        sorting_algorithm(data_copy, history, selected_sort_criteria, selected_sort_order) 
-        end_time = time.time() 
+        data_copy = data.copy()
+        history = [data_copy[:]]
 
-        elapsed_time = end_time - start_time 
+        start_time = time.time()
+        sorting_algorithm(data_copy, history,
+                          selected_sort_criteria, selected_sort_order)
+        end_time = time.time()
+
+        elapsed_time = end_time - start_time
 
         return data_copy, history, elapsed_time
 
@@ -41,7 +43,6 @@ class FileSortController:
                         data[j], data[j+1] = data[j+1], data[j]
                         history.append(data[:])
 
-
     def __selection_sort(self, data, history, criteria, order):
         for i in range(len(data)):
             min_idx = i
@@ -54,6 +55,8 @@ class FileSortController:
                         min_idx = j
             data[i], data[min_idx] = data[min_idx], data[i]
             history.append(data[:])
+
+    # 정렬되어 있는 경우 한 번씩만 비교하므로 O(n)이 걸린다.
 
     def __insertion_sort(self, data, history, criteria, order):
         for i in range(1, len(data)):
@@ -71,15 +74,20 @@ class FileSortController:
                     j -= 1
                 data[j + 1] = key
                 history.append(data[:])
-    
+
+    # 피봇은 마지막 원소로 설정
     def __quick_sort(self, data, history, criteria, order):
-        self.__quick_sort_recursive(data, history, criteria, order, 0, len(data) - 1)
+        self.__quick_sort_recursive(
+            data, history, criteria, order, 0, len(data) - 1)
 
     def __quick_sort_recursive(self, data, history, criteria, order, low, high):
         if low < high:
-            partition_index = self.__partition(data, history, criteria, order, low, high)
-            self.__quick_sort_recursive(data, history, criteria, order, low, partition_index - 1)
-            self.__quick_sort_recursive(data, history, criteria, order, partition_index + 1, high)
+            partition_index = self.__partition(
+                data, history, criteria, order, low, high)
+            self.__quick_sort_recursive(
+                data, history, criteria, order, low, partition_index - 1)
+            self.__quick_sort_recursive(
+                data, history, criteria, order, partition_index + 1, high)
 
     # 피봇을 기준으로 작은 값은 왼쪽, 큰 값은 오른쪽으로 분할
     def __partition(self, data, history, criteria, order, low, high):
@@ -99,14 +107,17 @@ class FileSortController:
         return i + 1
 
     def __merge_sort(self, data, history, criteria, order):
-        self.__merge_sort_recursive(data, history, criteria, order, 0, len(data) - 1)
+        self.__merge_sort_recursive(
+            data, history, criteria, order, 0, len(data) - 1)
 
     def __merge_sort_recursive(self, data, history, criteria, order, low, high):
         # low=high가 되면 원소가 1개이므로 종료
         if low < high:
             mid = (low + high) // 2
-            self.__merge_sort_recursive(data, history, criteria, order, low, mid)
-            self.__merge_sort_recursive(data, history, criteria, order, mid + 1, high)
+            self.__merge_sort_recursive(
+                data, history, criteria, order, low, mid)
+            self.__merge_sort_recursive(
+                data, history, criteria, order, mid + 1, high)
             self.__merge(data, history, criteria, order, low, mid, high)
 
     def __merge(self, data, history, criteria, order, low, mid, high):
@@ -140,6 +151,5 @@ class FileSortController:
             data[k] = right[j]
             j += 1
             k += 1
-        
+
         history.append(data[:])
-     
