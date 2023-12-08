@@ -1,3 +1,5 @@
+
+
 def get_maze_answer(maze: dict) -> list:
     rows, cols = zip(*maze.keys())
     N = max(rows)
@@ -15,12 +17,14 @@ def get_maze_answer(maze: dict) -> list:
     stack.append((N, M, [(N, M)]))
 
     visited[N][M] = True
+    optimal_path = None
 
     while stack:
         x, y, path = stack.pop()
         if x == 1 and y == 1:
-            return path
-
+            if optimal_path is None or len(optimal_path) > len(path):
+                optimal_path = path
+            continue
         for d in maze[(x, y)]:
 
             # 벽 = 0, 길 = 1
@@ -37,4 +41,18 @@ def get_maze_answer(maze: dict) -> list:
             stack.append((nx, ny, path + [(nx, ny)]))
             visited[nx][ny] = True
 
-    return None
+    return optimal_path
+
+
+if __name__ == '__main__':
+    maze = {(1, 1): {'E': 0, 'W': 0, 'N': 0, 'S': 1},
+            (2, 1): {'E': 1, 'W': 0, 'N': 1, 'S': 0},
+            (3, 1): {'E': 1, 'W': 0, 'N': 0, 'S': 0},
+            (1, 2): {'E': 1, 'W': 0, 'N': 0, 'S': 0},
+            (2, 2): {'E': 0, 'W': 1, 'N': 0, 'S': 1},
+            (3, 2): {'E': 1, 'W': 1, 'N': 1, 'S': 0},
+            (1, 3): {'E': 0, 'W': 1, 'N': 0, 'S': 1},
+            (2, 3): {'E': 0, 'W': 0, 'N': 1, 'S': 1},
+            (3, 3): {'E': 0, 'W': 1, 'N': 1, 'S': 0}}
+
+    print(get_maze_answer(maze))
