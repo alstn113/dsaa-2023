@@ -32,7 +32,6 @@ python src/main.py
 
 - `create_graph` 함수는 inList, outList, usernameList를 이용하여 그래프를 생성하고, 그래프를 반환합니다.
 
-  - 시각화를 위해서 networkx 라이브러리를 사용하였습니다.
   - inList는 각 노드로 들어오는 인덱스 리스트입니다.
   - outList는 각 노드에서 나가는 인덱스 리스트입니다.
   - usernameList는 각 노드의 이름 리스트입니다.
